@@ -1,0 +1,40 @@
+{
+  "name": "praktikum",
+  "version": "0.0.1",
+  "description": "https://github.com/Natalyaka25/mesto-project-ff",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Natalyaka25/mesto-project-ff.git"
+  },
+  "author": "Nataliya Borisova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Natalyaka25/mesto-project-ff/issues"
+  },
+  "homepage": "https://github.com/Natalyaka25/mesto-project-ff#readme",
+  "dependencies": {
+    "core-js": "^3.43.0",
+    "jquery": "^3.7.1",
+    "react-scripts": "^5.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "autoprefixer": "^10.4.21",
+    "babel-loader": "^10.0.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.3",
+    "mini-css-extract-plugin": "^2.9.2",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.1.1",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}
