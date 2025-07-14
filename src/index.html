@@ -42,50 +42,98 @@
         <div class="popup__content">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Редактировать профиль</h3>
-          <form class="popup__form" name="edit-profile">
+          <!-- Форма профиля -->
+          <form class="popup__form" name="edit-profile" novalidate>
             <input
+              id="name__input"
               type="text"
               name="name"
               class="popup__input popup__input_type_name"
               placeholder="Имя"
+              minlength="2"
+              maxlength="40"
               required
+              data-validate-pattern="^[a-zA-Zа-яА-ЯёЁ\s-]+$"
+              data-error-format="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+              data-error-empty="Вы пропустили это поле"
             />
+            <span class="name__input-error"></span>
             <input
+              id="description__input"
               type="text"
               name="description"
               class="popup__input popup__input_type_description"
               placeholder="Занятие"
+              minlength="2"
+              maxlength="200"
               required
+              data-error-empty="Вы пропустили это поле"
             />
+            <span class="description__input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
           </form>
+          <!-- ----------------------------------------------------- -->
         </div>
+        <!--  -->
+        <div class="popup popup_type_edit-avatar">
+          <div class="popup__content">
+            <button type="button" class="popup__close"></button>
+            <h3 class="popup__title">Обновить аватар</h3>
+            <form class="popup__form" name="new-avatar" novalidate>
+              <input
+                id="url__input"
+                type="url"
+                name="link"
+                class="popup__input popup__input_type_avatar"
+                placeholder="Ссылка на аватар"
+                required
+                data-error-empty="Вы пропустили это поле"/>
+              <span class="url__input-error"></span>
+              <button type="submit" class="button popup__button">
+                Сохранить
+              </button>
+            </form>           
+          </div>
+        </div>
+        <!--  -->
       </div>
       <div class="popup popup_type_new-card">
         <div class="popup__content">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Новое место</h3>
-          <form class="popup__form" name="new-place">
+          <!-- Форма с добавление карточек -->
+          <form class="popup__form" name="new-place" novalidate>
             <input
+              id="text_input"
               type="text"
               name="place-name"
               class="popup__input popup__input_type_card-name"
               placeholder="Название"
+              minlength="2"
+              maxlength="30"
               required
+              data-validate-pattern="^[a-zA-Zа-яА-ЯёЁ\s-]+$"
+              data-error-format="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+              data-error-empty="Вы пропустили это поле"
             />
+            <span class="text_input-error"></span>
             <input
+              id="url__input"
               type="url"
               name="link"
               class="popup__input popup__input_type_url"
               placeholder="Ссылка на картинку"
               required
+              data-error-empty="Вы пропустили это поле"
             />
+            <span class="url__input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
           </form>
+          <!-- -------------------------------------------- -->
         </div>
       </div>
       <div class="popup popup_type_image">
@@ -103,7 +151,10 @@
         <button type="button" class="card__delete-button"></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <button type="button" class="card__like-button"></button>
+          <div class="card__like">
+            <button type="button" class="card__like-button"></button>
+            <p class="card__like-count"></p>
+          </div>
         </div>
       </li>
     </template>

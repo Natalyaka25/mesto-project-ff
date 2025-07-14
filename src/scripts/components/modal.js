@@ -5,11 +5,16 @@ export function openModal(popupElement) {
   // Открываем нужный попап
 
   document.addEventListener("keydown", handleEscape);
-  popupElement.classList.add("popup_is-animated");
-  setTimeout(() => {
-    popupElement.classList.add(popupOpendClass);
-  }, 10);
+  // popupElement.classList.add("popup_is-animated");
+  // setTimeout(() => {
+  //   popupElement.classList.add(popupOpendClass);
+  // }, 10);
+
+  // void popupElement.offsetWidth; // Принудительный перерасчёт
+  popupElement.classList.add(popupOpendClass);
+  document.addEventListener("keydown", handleEscape);
 }
+
 
 // Универсальная функция закрытия попапа
 export function closeModal(popupElement) {
@@ -41,4 +46,5 @@ export function handleButtonClose(popup) {
     closeModal(popup);
   });
   popup.addEventListener("click", handleOverlayClick);
+  popup.classList.add("popup_is-animated");
 }
