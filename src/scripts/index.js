@@ -19,8 +19,6 @@ import {
   patchProfileAvatare,
 } from "./components/api.js";
 
-import * as test from "./Test.js";
-
 // @todo: DOM узлы
 const contentList = document.querySelector(".places__list");
 const openButtonCard = document.querySelector(".profile__add-button"); // Кнопка открытия поапа для добавления карточек
@@ -64,11 +62,6 @@ let cardCallbacks = {
   onOpenView: null,
 };
 
-  // openProfileAvatar.addEventListener("click", () => {
-  //   handleOpenAvatar();
-  // });
-
-
 // Функция для обновления колбэков
 function updateCardCallbacks(card) {
   const isMyCard = card.owner._id === currentUserId;
@@ -91,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((userData) => {
       profileName.textContent = userData.name;
       profileJob.textContent = userData.about;
+      openProfileAvatar.style.backgroundImage = `url('${userData.avatar}')`;
     })
     .catch(console.error);
 });
@@ -158,7 +152,6 @@ function handleOpenView({ name, link }) {
   captionView.textContent = name;
   openModal(imagePopup);
 }
-
 /* Функция изменения профиля */
 function handleFormProfileSubmit(evt) {
   evt.preventDefault(); // Отмена стандартной отправки формы
@@ -178,14 +171,14 @@ function handleFormProfileSubmit(evt) {
 }
 
 //** Вызов валидации */
-enableValidation(classValidate);
+// enableValidation(classValidate);
 
 // Обработчики открытия профиля
 openButtonProfile.addEventListener("click", () => {
   getUserInfo().then((userData) => {
     nameInput.value = userData.name;
     jobInput.value = userData.about;
-  });
+    });
   clearValidation(formElementProfile, classValidate);
   openModal(popupProfile);
 });
@@ -222,3 +215,54 @@ Promise.all(promises)
     });
   })
   .catch((err) => console.error("Ошибка загрузки:", err));
+
+
+  const formProfileAvatar = document.forms["edit-avatar"];
+  const avatarInput = formProfileAvatar.querySelector(".popup__input_type_avatar");
+  const popupProfileAvatar = document.querySelector(".popup_type_edit-avatar");
+  const openProfileAvatar = document.querySelector(".profile__image");
+
+
+// Обработчики открытия модального окна аватара
+
+
+
+// Открытие попапа
+openProfileAvatar.addEventListener("click", () => {
+  openModal(popupProfileAvatar);
+});
+
+// Обработка отправки формы
+formProfileAvatar.addEventListener("submit", (e) => {
+  e.preventDefault();
+  
+  const linkAvatar = avatarInput.value.trim();
+  console.log(linkAvatar);
+  
+  // Валидация URL
+  if (!isValidUrl(linkAvatar)) {
+    alert("Пожалуйста, введите корректную ссылку на изображение");
+    return;
+  }
+
+  patchProfileAvatare(linkAvatar)
+    .then((data) => {
+      openProfileAvatar.style.backgroundImage = `url('${data.avatar}')`;
+      closeModal(popupProfileAvatar); // Закрываем попап
+      formProfileAvatar.reset(); // Очищаем форму
+    })
+    .catch((error) => {
+      console.error('Ошибка:', error);
+      alert(error.message || "Не удалось обновить аватар");
+    });
+});
+
+// Функция проверки URL
+function isValidUrl(url) {
+  try {
+    new URL(url);
+    return /^https?:\/\/.+(\.jpg|\.jpeg|\.png|\.gif|\.webp)$/i.test(url);
+  } catch {
+    return false;
+  }
+}

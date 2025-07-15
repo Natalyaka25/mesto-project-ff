@@ -1,21 +1,17 @@
 
+import {
+  openModal,
+} from "./components/modal.js";
 
+export const popupProfileAvatar = document.querySelector(".popup_type_edit-avatar"); //popup для аватара
+export const formProfileAvatar = document.forms["edit-avatar"]; // форма аватара
 export const openProfileAvatar = document.querySelector(".profile__image");
-export const popupProfileAvatar = document.querySelector(".popup_type_edit-avatar"); //popup для открытия карточки
-export const imageAvatar = popupProfileAvatar.querySelector(".popup__image"); //popup картинки
-export const popupProfile = document.querySelector(".popup_type_edit"); //popup профиля
 
 
-/** Функция открытия карточки popup **/
+
+/** Функция открытия попапа аватара **/
 export function handleOpenAvatar() {
-  // imageAvatar.src = link;
-  openModal(popupProfile);
+  console.log("Клик по аватару зарегистрирован!"); // Проверка
+  openModal(popupProfileAvatar);
 }
-
-
-  openProfileAvatar.addEventListener("click", () => {
-    handleOpenAvatar();
-  });
-
-
   // patchProfileAvatare();

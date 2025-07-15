@@ -115,13 +115,11 @@ export const unlikeCard = (cardId) => {
   });
 };
 
-export const patchProfileAvatare = (avatarUrl) => {
+export const patchProfileAvatare = (linkAvatar) => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: "PATCH",
     headers: config.headers,
-    body: JSON.stringify({
-      avatar: avatarUrl,
-      }),
+    body: JSON.stringify({ avatar: linkAvatar}),
   }).then((res) => {
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
