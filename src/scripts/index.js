@@ -55,7 +55,7 @@ const classValidate = {
   errorClass: "popup__error_visible",
 };
 
-let currentUserId;
+let currentUserId = null;
 let cardCallbacks = {
   onDeleteCard: null,
   onLikeCard: null,
@@ -77,6 +77,8 @@ const promises = [
   getUserInfo(), // Запрос данных пользователя
   getInitialCards(), // Запрос карточек
 ];
+
+enableValidation(classValidate);
 
 // Загружаем профиль при загрузке страницы
 document.addEventListener("DOMContentLoaded", () => {
@@ -131,7 +133,7 @@ function handleCardDelete(cardId) {
     });
 }
 
-// Обработчик клика на лайк
+// Функция клика на лайк
 function handleCardLike(cardId, likeButton, likesCounter) {
   const isLiked = likeButton.classList.contains("card__like-button_is-active");
 
@@ -170,15 +172,12 @@ function handleFormProfileSubmit(evt) {
     });
 }
 
-//** Вызов валидации */
-// enableValidation(classValidate);
-
 // Обработчики открытия профиля
 openButtonProfile.addEventListener("click", () => {
   getUserInfo().then((userData) => {
     nameInput.value = userData.name;
     jobInput.value = userData.about;
-    });
+  });
   clearValidation(formElementProfile, classValidate);
   openModal(popupProfile);
 });
@@ -216,53 +215,51 @@ Promise.all(promises)
   })
   .catch((err) => console.error("Ошибка загрузки:", err));
 
-
-  const formProfileAvatar = document.forms["edit-avatar"];
-  const avatarInput = formProfileAvatar.querySelector(".popup__input_type_avatar");
-  const popupProfileAvatar = document.querySelector(".popup_type_edit-avatar");
-  const openProfileAvatar = document.querySelector(".profile__image");
-
+/****************************************************************************************************/
+const formProfileAvatar = document.forms["edit-avatar"];
+const avatarInput = formProfileAvatar.querySelector(
+  ".popup__input_type_avatar"
+);
+const popupProfileAvatar = document.querySelector(".popup_type_edit-avatar");
+const openProfileAvatar = document.querySelector(".profile__image");
 
 // Обработчики открытия модального окна аватара
+// Открытие попапа для смены аватара
 
-
-
-// Открытие попапа
 openProfileAvatar.addEventListener("click", () => {
   openModal(popupProfileAvatar);
 });
 
-// Обработка отправки формы
-formProfileAvatar.addEventListener("submit", (e) => {
-  e.preventDefault();
-  
+function handleAvatarEdit(evt) {
+  evt.preventDefault(); // Отменяем стандартную отправку формы
+
   const linkAvatar = avatarInput.value.trim();
-  console.log(linkAvatar);
-  
-  // Валидация URL
-  if (!isValidUrl(linkAvatar)) {
-    alert("Пожалуйста, введите корректную ссылку на изображение");
-    return;
-  }
+  const submitButton = formProfileAvatar.querySelector(".popup__button");
+  const originalButtonText = submitButton.textContent;
 
+  // Блокируем кнопку на время запроса
+  submitButton.disabled = true;
+  submitButton.textContent = "Сохранение...";
+
+  // Отправляем запрос на сервер
   patchProfileAvatare(linkAvatar)
-    .then((data) => {
+    .then(function (data) {
+      // Успех: обновляем аватар и закрываем попап
       openProfileAvatar.style.backgroundImage = `url('${data.avatar}')`;
-      closeModal(popupProfileAvatar); // Закрываем попап
       formProfileAvatar.reset(); // Очищаем форму
+      closeModal(popupProfileAvatar); // Закрываем попап
     })
-    .catch((error) => {
-      console.error('Ошибка:', error);
-      alert(error.message || "Не удалось обновить аватар");
+    .catch(function (error) {
+      // Ошибка: выводим сообщение
+      console.error("Ошибка:", error);
+      alert("Не удалось обновить аватар");
+    })
+    .finally(function () {
+      // Восстанавливаем кнопку
+             submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
     });
-});
-
-// Функция проверки URL
-function isValidUrl(url) {
-  try {
-    new URL(url);
-    return /^https?:\/\/.+(\.jpg|\.jpeg|\.png|\.gif|\.webp)$/i.test(url);
-  } catch {
-    return false;
-  }
 }
+
+// Правильное добавление обработчика - передаем ссылку на функцию, а не вызываем её
+formProfileAvatar.addEventListener("submit", handleAvatarEdit);
