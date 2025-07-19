@@ -62,6 +62,8 @@ let cardCallbacks = {
   onOpenView: null,
 };
 
+enableValidation(classValidate);
+
 // Функция для обновления колбэков
 function updateCardCallbacks(card) {
   const isMyCard = card.owner._id === currentUserId;
@@ -78,8 +80,6 @@ const promises = [
   getInitialCards(), // Запрос карточек
 ];
 
-enableValidation(classValidate);
-
 // Загружаем профиль при загрузке страницы
 document.addEventListener("DOMContentLoaded", () => {
   getUserInfo()
@@ -95,6 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
 
+  const submitButton = formElementCard.querySelector(".popup__button");
+  const originalButtonText = submitButton.textContent;
+
+  // Блокируем кнопку на время запроса
+  submitButton.disabled = true;
+  submitButton.textContent = "Сохранение...";
+
   // Получаем данные из формы
   const name = placeInput.value;
   const link = linkInput.value;
@@ -109,6 +116,11 @@ function handleAddCardFormSubmit(evt) {
     })
     .catch((error) => {
       console.error("Не удалось создать карточку:", error); // Cообщение об ошибке
+    })
+    .finally(function () {
+      // Восстанавливаем кнопку
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
     });
 
   closeModal(popupCardAdd); // Очищаем форму и закрываем попап
@@ -154,21 +166,32 @@ function handleOpenView({ name, link }) {
   captionView.textContent = name;
   openModal(imagePopup);
 }
+
 /* Функция изменения профиля */
 function handleFormProfileSubmit(evt) {
   evt.preventDefault(); // Отмена стандартной отправки формы
+  const submitButton = formElementProfile.querySelector(".popup__button");
+  const originalButtonText = submitButton.textContent;
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Сохранение...";
+
   // Получение значений полей jobInput и nameInput из свойства value
   const nameValue = nameInput.value;
   const jobValue = jobInput.value;
   patchProfile(nameValue, jobValue)
     .then((data) => {
-      // console.log("Успешное обновление профиля:", jobValue); Удалить
       profileName.textContent = data.name;
       profileJob.textContent = data.about;
       closeModal(popupProfile);
     })
     .catch((error) => {
       console.error("Ошибка при обновлении профиля:", error);
+    })
+    .finally(function () {
+      // Восстанавливаем кнопку
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
     });
 }
 
@@ -226,10 +249,7 @@ const openProfileAvatar = document.querySelector(".profile__image");
 // Обработчики открытия модального окна аватара
 // Открытие попапа для смены аватара
 
-openProfileAvatar.addEventListener("click", () => {
-  openModal(popupProfileAvatar);
-});
-
+/** Функция обновления профиля */
 function handleAvatarEdit(evt) {
   evt.preventDefault(); // Отменяем стандартную отправку формы
 
@@ -247,7 +267,6 @@ function handleAvatarEdit(evt) {
       // Успех: обновляем аватар и закрываем попап
       openProfileAvatar.style.backgroundImage = `url('${data.avatar}')`;
       formProfileAvatar.reset(); // Очищаем форму
-      closeModal(popupProfileAvatar); // Закрываем попап
     })
     .catch(function (error) {
       // Ошибка: выводим сообщение
@@ -256,10 +275,17 @@ function handleAvatarEdit(evt) {
     })
     .finally(function () {
       // Восстанавливаем кнопку
-             submitButton.disabled = false;
+      submitButton.disabled = false;
       submitButton.textContent = originalButtonText;
     });
+  closeModal(popupProfileAvatar); // Закрываем попап
 }
 
-// Правильное добавление обработчика - передаем ссылку на функцию, а не вызываем её
+// Открытие модального окна для профиля
+openProfileAvatar.addEventListener("click", () => {
+  clearValidation(popupProfileAvatar, classValidate);
+  openModal(popupProfileAvatar);
+});
+
+// добавление обработчика для профиля
 formProfileAvatar.addEventListener("submit", handleAvatarEdit);

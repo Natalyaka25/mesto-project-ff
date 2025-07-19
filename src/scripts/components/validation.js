@@ -41,6 +41,14 @@ const isValid = (formElement, inputElement, classValidate) => {
   // Сбрасываем кастомные ошибки
   inputElement.setCustomValidity("");
 
+  // Проверка на пустое поле (только если поле обязательно)
+  if (inputElement.required && inputElement.value.trim() === "") {
+    const errorMessage = inputElement.dataset.errorEmpty;
+    inputElement.setCustomValidity(errorMessage);
+    showInputError(formElement, inputElement, errorMessage, classValidate);
+    return false;
+  }
+
   // Проверка регулярного выражения (только для кастомных проверок)
   if (inputElement.dataset.validatePattern) {
     const patternRegex = new RegExp(inputElement.dataset.validatePattern);
@@ -52,7 +60,7 @@ const isValid = (formElement, inputElement, classValidate) => {
     }
   }
 
-  // Встроенная валидацию браузера
+  // Встроенная валидация браузера
   if (!inputElement.validity.valid) {
     showInputError(
       formElement,
@@ -71,7 +79,9 @@ const setEventListeners = (formElement, classValidate) => {
   const inputList = Array.from(
     formElement.querySelectorAll(classValidate.inputSelector)
   );
-  const buttonElement = formElement.querySelector(classValidate.submitButtonSelector);
+  const buttonElement = formElement.querySelector(
+    classValidate.submitButtonSelector
+  );
 
   // Добавляем проверку при инициализации
   toggleButtonState(inputList, buttonElement, classValidate);
@@ -93,7 +103,9 @@ export const resetValidation = (formElement, classValidate) => {
   const inputList = Array.from(
     formElement.querySelectorAll(classValidate.inputSelector)
   );
-  const buttonElement = formElement.querySelector(classValidate.submitButtonSelector);
+  const buttonElement = formElement.querySelector(
+    classValidate.submitButtonSelector
+  );
 
   inputList.forEach((inputElement) => {
     hideInputError(formElement, inputElement, classValidate);
@@ -106,7 +118,9 @@ export const resetValidation = (formElement, classValidate) => {
 };
 
 export const enableValidation = (classValidate) => {
-  const formList = Array.from(document.querySelectorAll(classValidate.formSelector));
+  const formList = Array.from(
+    document.querySelectorAll(classValidate.formSelector)
+  );
   formList.forEach((formElement) => {
     setEventListeners(formElement, classValidate);
   });
@@ -118,7 +132,9 @@ export const clearValidation = (formElement, classValidate) => {
     formElement.querySelectorAll(classValidate.inputSelector)
   );
   // Находим кнопку отправки
-  const buttonElement = formElement.querySelector(classValidate.submitButtonSelector);
+  const buttonElement = formElement.querySelector(
+    classValidate.submitButtonSelector
+  );
 
   // Очищаем ошибки для всех полей
   inputList.forEach((inputElement) => {

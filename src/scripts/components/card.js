@@ -16,7 +16,6 @@ export function createCard(
   const likeCount = card.querySelector(".card__like-count");
   const likeModifier = "card__like-button_is-active";
 
-
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
   cardTitle.textContent = cardData.name;
