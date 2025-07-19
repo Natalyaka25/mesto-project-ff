@@ -35,8 +35,6 @@ const setButtonState = (button, { inactiveButtonClass }, isDisabled) => {
 
 const toggleButtonState = (inputList, buttonElement, config) => {
   const isInvalid = hasInvalidInput(inputList);
-  // buttonElement.disabled = isInvalid;
-  // buttonElement.classList.toggle(inactiveButtonClass, isInvalid);
   setButtonState(buttonElement, config, isInvalid);
 };
 
@@ -114,10 +112,7 @@ export const resetValidation = (formElement, classValidate) => {
     hideInputError(formElement, inputElement, classValidate);
   });
 
-  if (buttonElement) {
-    buttonElement.disabled = false;
-    buttonElement.classList.remove(classValidate.inactiveButtonClass);
-  }
+  setButtonState(buttonElement, classValidate, true);
 };
 
 export const enableValidation = (classValidate) => {
@@ -140,11 +135,11 @@ export const clearValidation = (formElement, classValidate) => {
   );
 
   // Очищаем ошибки для всех полей
-  inputList.forEach((inputElement) => {        
+  inputList.forEach((inputElement) => {
     hideInputError(formElement, inputElement, classValidate);
     inputElement.setCustomValidity("");
   });
 
   // Делаем кнопку неактивной
-    setButtonState(buttonElement, classValidate, true);
+  setButtonState(buttonElement, classValidate, true);
 };
