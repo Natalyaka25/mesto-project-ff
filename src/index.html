@@ -66,6 +66,8 @@
               minlength="2"
               maxlength="200"
               required
+              data-validate-pattern="^[a-zA-Zа-яА-ЯёЁ\s-]+$"
+              data-error-format="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               data-error-empty="Вы пропустили это поле"
             />
             <span class="description__input-error"></span>

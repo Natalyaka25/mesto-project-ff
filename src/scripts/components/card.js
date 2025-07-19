@@ -1,6 +1,21 @@
 // @todo: Темплейт карточки
-// const cardTemplatePlacesItemSelector = ".places__item";
+
+import { likeCard, unlikeCard } from './api.js';
 const cardTemplate = document.querySelector("#card-template").content;
+
+// Функция клика на лайк
+export  function handleCardLike(cardId, likeButton, likesCounter) {
+  const isLiked = likeButton.classList.contains("card__like-button_is-active");
+
+  (isLiked ? unlikeCard(cardId) : likeCard(cardId))
+    .then((card) => {
+      likesCounter.textContent = card.likes.length;
+      likeButton.classList.toggle("card__like-button_is-active");
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 
 // @todo: Функция создания карточки
 export function createCard(
@@ -27,6 +42,7 @@ export function createCard(
 
   // Проверяем, есть ли лайк текущего пользователя
   const isLikedByMe = cardData.likes.some((user) => user._id === currentUserId);
+  const isMyCard = cardData.owner._id === currentUserId;
 
   // Обновляем класс для лайка
   if (isLikedByMe) {
@@ -39,7 +55,7 @@ export function createCard(
     onLikeCard(cardData._id, likeButton, likeCount); // Теперь передаем все нужные элементы
   });
 
-  if (onDeleteCard) {
+  if (isMyCard) {
     deleteButton.style.display = "block";
     deleteButton.addEventListener("click", () => {
       onDeleteCard(cardData._id, card); // Передаём и id, и DOM-элемент
